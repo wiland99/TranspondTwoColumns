@@ -39,12 +39,10 @@ public class Main {
                     i[2] = i[2] + Integer.parseInt(String.valueOf(number));
                 }
             });
-            IntStream.range(0, 3).forEach(sheetFinal::autoSizeColumn);
-            try {
-                workBookFinal.write(new FileOutputStream(desktopUrl + "final.xlsx"));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+
+
         });
+        IntStream.range(0, 3).forEach(sheetFinal::autoSizeColumn);
+        workBookFinal.write(new FileOutputStream(desktopUrl + "final.xlsx"));
     }
 }
