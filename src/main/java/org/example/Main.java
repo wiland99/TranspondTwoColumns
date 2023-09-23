@@ -23,17 +23,20 @@ public class Main {
         Workbook workBookFinal = new XSSFWorkbook();
         Sheet sheetFinal = workBookFinal.createSheet("final");
         rows.next();
-        int[] i = new int[3];
+        int[] i = new int[2];
         rows.forEachRemaining(row -> {
             Iterator<Cell> cells = row.cellIterator();
-            IntStream.range(0, 2).forEach(n-> cells.next());
-            final LocalDate[] startDate = {LocalDate.of(Integer.parseInt(row.getCell(1).getStringCellValue()), Month.JANUARY, 1)};
+            IntStream.range(0, 2).forEach(n -> cells.next());
+            final LocalDate[] startDate = new LocalDate[2];
+            Arrays.fill(startDate, LocalDate.of(Integer.parseInt(row.getCell(1).getStringCellValue()), Month.JANUARY, 1) );
             cells.forEachRemaining(cell -> Arrays.stream(cell.getStringCellValue().split("")).forEach(workDayOrNot -> {
-                i[2] = 0;
-                Arrays.asList(new Object[]{startDate[0].toString(), i[1], startDate[0]}).forEach(n -> sheetFinal.createRow(i[0]++).createCell(i[2]++).setCellValue(String.valueOf(n)));
-                i[1] = i[1] + Integer.parseInt(workDayOrNot);
+                i[1] = 0;
+                Row row2 = sheetFinal.createRow(i[0]++);
+                startDate[1] = startDate[1].plusDays(Integer.parseInt(workDayOrNot));
+                Arrays.asList(new Object[]{startDate[0].toString(), workDayOrNot, startDate[1].toString()}).forEach(n -> row2.createCell(i[1]++).setCellValue(String.valueOf(n)));
                 startDate[0] = startDate[0].plusDays(1);
             }));
+            i[0]++;
         });
         IntStream.range(0, 3).forEach(sheetFinal::autoSizeColumn);
         workBookFinal.write(new FileOutputStream(desktopUrl + "final.xlsx"));
