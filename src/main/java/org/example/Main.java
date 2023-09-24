@@ -16,7 +16,7 @@ import java.util.Iterator;
 import java.util.stream.IntStream;
 
 public class Main {
-    public static void main(String[] args) throws IOException, RuntimeException {
+    public static void main(String[] args) throws IOException {
         String desktopUrl = System.getProperty("user.home") + "/Desktop/";
         Iterator<Row> rows = new XSSFWorkbook(new FileInputStream(desktopUrl + "Calendar.xlsx")).getSheetAt(0).rowIterator();
         Workbook workBookFinal = new XSSFWorkbook();
@@ -45,5 +45,6 @@ public class Main {
         }
         IntStream.range(0, 3).forEach(sheetFinal::autoSizeColumn);
         workBookFinal.write(new FileOutputStream(desktopUrl + "final.xlsx"));
+        workBookFinal.close();
     }
 }
