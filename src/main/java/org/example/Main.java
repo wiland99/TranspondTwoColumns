@@ -16,7 +16,6 @@ import java.util.Iterator;
 import java.util.stream.IntStream;
 
 public class Main {
-
     public static void main(String[] args) throws IOException, RuntimeException {
         String desktopUrl = System.getProperty("user.home") + "/Desktop/";
         Iterator<Row> rows = new XSSFWorkbook(new FileInputStream(desktopUrl + "Calendar.xlsx")).getSheetAt(0).rowIterator();
@@ -29,10 +28,10 @@ public class Main {
             Row row = rows.next();
             Iterator<Cell> cells = row.cellIterator();
             cells.next();
-            int year = Integer.valueOf(cells.next().getStringCellValue());
+            int year = Integer.parseInt(cells.next().getStringCellValue());
             LocalDate startDate = LocalDate.of(year, Month.JANUARY, 1);
             while (cells.hasNext()) {
-                char cell[] = cells.next().getStringCellValue().toCharArray();
+                char[] cell = cells.next().getStringCellValue().toCharArray();
                 for (char c : cell) {
                     i[1] = 0;
                     i[2] += Character.getNumericValue(c);
