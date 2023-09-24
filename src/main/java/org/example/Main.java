@@ -11,9 +11,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.stream.IntStream;
 
@@ -27,23 +25,26 @@ public class Main {
         rows.next();
         int[] i = new int[3];
         i[2] = 1;
-        rows.forEachRemaining(row -> {
+        while (rows.hasNext()) {
+            Row row = rows.next();
             Iterator<Cell> cells = row.cellIterator();
-            IntStream.range(0, 2).forEach(n -> cells.next());
-
-            final LocalDate[] startDate = new LocalDate[]{LocalDate.of(Integer.parseInt(row.getCell(1).getStringCellValue()), Month.JANUARY, 1)};
-            cells.forEachRemaining(cell -> {
-                for (char number : cell.getStringCellValue().toCharArray()) {
+            cells.next();
+            int year = Integer.valueOf(cells.next().getStringCellValue());
+            LocalDate startDate = LocalDate.of(year, Month.JANUARY, 1);
+            while (cells.hasNext()) {
+                char cell[] = cells.next().getStringCellValue().toCharArray();
+                for (char c : cell) {
                     i[1] = 0;
-                    i[2] = i[2] + Integer.parseInt(String.valueOf(number));
+                    i[2] += Character.getNumericValue(c);
                     Row row2 = sheetFinal.createRow(i[0]++);
-                    Arrays.asList(startDate[0].toString(), String.valueOf(number), String.valueOf(i[2])).forEach(n -> row2.createCell(i[1]++).setCellValue(n));
-                    startDate[0] = startDate[0].plusDays(1);
+                    for (Object n : Arrays.asList(startDate, c, i[2])) {
+                        row2.createCell(i[1]++).setCellValue(String.valueOf(n));
+                    }
+                    startDate = startDate.plusDays(1);
                 }
-            });
-        });
+            }
+        }
         IntStream.range(0, 3).forEach(sheetFinal::autoSizeColumn);
         workBookFinal.write(new FileOutputStream(desktopUrl + "final.xlsx"));
-
     }
 }
