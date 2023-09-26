@@ -29,18 +29,29 @@ public class Main {
             Iterator<Cell> cells = row.cellIterator();
             cells.next();
             int year = Integer.parseInt(cells.next().getStringCellValue());
-            LocalDate startDate = LocalDate.of(year, Month.JANUARY, 1);
-            while (cells.hasNext()) {
-                char[] cell = cells.next().getStringCellValue().toCharArray();
-                for (char c : cell) {
+            LocalDate[] startDate = new LocalDate[1]
+            startDate[0] = LocalDate.of(year, Month.JANUARY, 1);
+
+
+cells.forEachRemaining(cell -> {
+for(char c : cell.toCharArray()) {
+
                     i[1] = 0;
                     i[2] += Character.getNumericValue(c);
                     Row row2 = sheetFinal.createRow(i[0]++);
-                    for (Object n : Arrays.asList(startDate, c, i[2])) {
+                    for (char c : cell) {
+                    i[1] = 0;
+                    i[2] += Character.getNumericValue(c);
+                    Row row2 = sheetFinal.createRow(i[0]++);
+                    for (Object n : Arrays.asList(startDate[0], c, i[2])) {
                         row2.createCell(i[1]++).setCellValue(String.valueOf(n));
                     }
-                    startDate = startDate.plusDays(1);
+                    startDate[0] = startDate[0].plusDays(1);
                 }
+}
+            while (cells.hasNext()) {
+                char[] cell = cells.next().getStringCellValue().toCharArray();
+                
             }
         }
         IntStream.range(0, 3).forEach(sheetFinal::autoSizeColumn);
